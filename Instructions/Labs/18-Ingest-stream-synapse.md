@@ -6,7 +6,6 @@ Azure Stream Analytics provides a cloud service that you can use to define a *qu
 
 In this exercise, you'll use Azure Stream Analytics to process a  stream of sales order data, such as might be generated from an online retail application. The order data will be sent to Azure Event Hubs, from where your Azure Stream Analytics jobs will read the data and ingest it into Azure Synapse Analytics.
 
-This exercise should take approximately **45** minutes to complete.
 
 ## Provision Azure resources
 
@@ -38,7 +37,7 @@ You'll use a combination of a PowerShell script and an ARM template to provision
     ```
 
 6. If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
-7. When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
+7. When prompted, enter a suitable **password** to be set for your Azure Synapse SQL pool.
 
     > **Note**: Be sure to remember this password!
 
