@@ -1,21 +1,20 @@
 # Lab 01: Explore Azure Synapse Analytics
 
 Azure Synapse Analytics provides a single, consolidated data analytics platform for end-to end data analytics. In this exercise, you'll explore various ways to ingest and explore data. This exercise is designed as a high-level overview of the various core capabilities of Azure Synapse Analytics. Other exercises are available to explore specific capabilities in more detail.
+An Azure *Synapse Analytics workspace* provides a central point for managing data and data processing runtimes. You can provision a workspace using the interactive interface in the Azure portal, or you can deploy a workspace and resources within it by using a script or template. In most production scenarios, it's best to automate provisioning with scripts and templates so that you can incorporate resource deployment into a repeatable development and operations (*DevOps*) process.
 
-This exercise should take approximately **60** minutes to complete.
 
 ## Provision an Azure Synapse Analytics workspace
 
-An Azure *Synapse Analytics workspace* provides a central point for managing data and data processing runtimes. You can provision a workspace using the interactive interface in the Azure portal, or you can deploy a workspace and resources within it by using a script or template. In most production scenarios, it's best to automate provisioning with scripts and templates so that you can incorporate resource deployment into a repeatable development and operations (*DevOps*) process.
 
-In this exercise, you'll use a combination of a PowerShell script and an ARM template to provision Azure Synapse Analytics.
+In this Task, you'll use a combination of a PowerShell script and an ARM template to provision Azure Synapse Analytics.
 
 1. In a web browser, sign into the [Azure portal](https://portal.azure.com) at `https://portal.azure.com` if not already signed in.
 2. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
 
-    ![Azure portal with a cloud shell pane](./images/cloud-shell.png)
+    ![Azure portal with a cloud shell pane](./images/work203ps.png)
 
-    > **Note**: If you have previously created a cloud shell that uses a *Bash* environment, use the drop-down menu at the top left of the cloud shell pane to change it to ***PowerShell***.
+    > **Note**: If you have previously created a cloud shell that uses a *Bash* environment, use the the drop-down menu at the top left of the cloud shell pane to change it to ***PowerShell***.
 
 3. Note that you can resize the cloud shell by dragging the separator bar at the top of the pane, or by using the **&#8212;**, **&#9723;**, and **X** icons at the top right of the pane to minimize, maximize, and close the pane. For more information about using the Azure Cloud Shell, see the [Azure Cloud Shell documentation](https://docs.microsoft.com/azure/cloud-shell/overview).
 
@@ -34,7 +33,7 @@ In this exercise, you'll use a combination of a PowerShell script and an ARM tem
     ```
 
 6. If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
-7. When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
+7. When prompted, enter a suitable **password** to be set for your Azure Synapse SQL pool.
 
     > **Note**: Be sure to remember this password!
 
@@ -71,8 +70,10 @@ One of the key tasks you can perform with Azure Synapse Analytics is to define *
 ### Use the Copy Data task to create a pipeline
 
 1. In Synapse Studio, on the **Home** page, select **Ingest** to open the **Copy Data** tool
-2. In the Copy Data tool, on the **Properties** step, ensure that **Built-in copy task** and **Run once now** are selected, and click **Next >**.
-3. On the **Source** step, in the **Dataset** substep, select the following settings:
+
+1. In the Copy Data tool, on the **Properties** step, ensure that **Built-in copy task** and **Run once now** are selected, and click **Next >**.
+
+1. On the **Source** step, in the **Dataset** substep, select the following settings:
     - **Source type**: All
     - **Connection**: *Create a new connection, and in the **New Connection** pane that appears, on the **Generic protocol** tab, select **HTTP**. Then continue and create a connection to a data file using the following settings:*
         - **Name**: Products
@@ -81,30 +82,36 @@ One of the key tasks you can perform with Azure Synapse Analytics is to define *
         - **Base URL**: `https://raw.githubusercontent.com/MicrosoftLearning/dp-203-azure-data-engineer/master/Allfiles/labs/01/adventureworks/products.csv`
         - **Server Certificate Validation**: Enable
         - **Authentication type**: Anonymous
-4. After creating the connection, on the **Source data store** page, ensure the following settings are selected, and then select **Next >**:
+
+1. After creating the connection, on the **Source data store** page, ensure the following settings are selected, and then select **Next >**:
     - **Relative URL**: *Leave blank*
     - **Request method**: GET
     - **Additional headers**: *Leave blank*
     - **Binary copy**: <u>Un</u>selected
     - **Request timeout**: *Leave blank*
     - **Max concurrent connections**: *Leave blank*
-5. On the **Source** step, in the **Configuration** substep, select **Preview data** to see a preview of the product data your pipeline will ingest, then close the preview.
-6. After previewing the data, on the **File format settings** page, ensure the following settings are selected, and then select **Next >**:
+
+1. On the **Source** step, in the **Configuration** substep, select **Preview data** to see a preview of the product data your pipeline will ingest, then close the preview.
+
+1. After previewing the data, on the **File format settings** page, ensure the following settings are selected, and then select **Next >**:
     - **File format**: DelimitedText
     - **Column delimiter**: Comma (,)
     - **Row delimiter**: Line feed (\n)
     - **First row as header**: Selected
     - **Compression type**: None
-7. On the **Destination** step, in the **Dataset** substep, select the following settings:
+
+1. On the **Destination** step, in the **Dataset** substep, select the following settings:
     - **Destination type**: Azure Data Lake Storage Gen 2
     - **Connection**: *Select the existing connection to your data lake store (this was created for you when you created the workspace).*
-8. After selecting the connection, on the **Destination/Dataset** step, ensure the following settings are selected, and then select **Next >**:
+
+1. After selecting the connection, on the **Destination/Dataset** step, ensure the following settings are selected, and then select **Next >**:
     - **Folder path**: files/product_data
     - **File name**: products.csv
     - **Copy behavior**: None
     - **Max concurrent connections**: *Leave blank*
     - **Block size (MB)**: *Leave blank*
-9. On the **Destination** step, in the **Configuration** substep, on the **File format settings** page, ensure that the following properties are selected. Then select **Next >**:
+
+1. On the **Destination** step, in the **Configuration** substep, on the **File format settings** page, ensure that the following properties are selected. Then select **Next >**:
     - **File format**: DelimitedText
     - **Column delimiter**: Comma (,)
     - **Row delimiter**: Line feed (\n)
@@ -112,16 +119,21 @@ One of the key tasks you can perform with Azure Synapse Analytics is to define *
     - **Compression type**: None
     - **Max rows per file**: *Leave blank*
     - **File name prefix**: *Leave blank*
-10. On the **Settings** step, enter the following settings and then click **Next >**:
+
+1. On the **Settings** step, enter the following settings and then click **Next >**:
     - **Task name**: Copy products
     - **Task description** Copy products data
     - **Fault tolerance**: *Leave blank*
     - **Enable logging**: <u>Un</u>selected
     - **Enable staging**: <u>Un</u>selected
-11. On the **Review and finish** step, on the **Review** substep, read the summary and then click **Next >**.
-12. On the **Deployment** step, wait for the pipeline to be deployed and then click **Finish**.
-13. In Synapse Studio, select the **Monitor** page, and in the **Pipeline runs** tab, wait for the **Copy products** pipeline to complete with a status of **Succeeded** (you can use the **&#8635; Refresh** button on the Pipeline runs page to refresh the status).
-14. View the **Integrate** page, and verify that it now contains a pipeline named **Copy products**.
+
+1. On the **Review and finish** step, on the **Review** substep, read the summary and then click **Next >**.
+
+1. On the **Deployment** step, wait for the pipeline to be deployed and then click **Finish**.
+
+1. In Synapse Studio, select the **Monitor** page, and in the **Pipeline runs** tab, wait for the **Copy products** pipeline to complete with a status of **Succeeded** (you can use the **&#8635; Refresh** button on the Pipeline runs page to refresh the status).
+
+1. View the **Integrate** page, and verify that it now contains a pipeline named **Copy products**.
 
 ### View the ingested data
 
@@ -417,14 +429,4 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 
 12. On the **Manage** page, select the **adx*xxxxxxx*** Data Explorer pool row and use its &#10074;&#10074; icon to pause it. --->
 
-## Delete Azure resources
-
-Now that you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
-
-1. Close the Synapse Studio browser tab and return to the Azure portal.
-2. On the Azure portal, on the **Home** page, select **Resource groups**.
-3. Select the **dp203-*xxxxxxx*** resource group for your Synapse Analytics workspace (not the managed resource group), and verify that it contains the Synapse workspace, storage account, SQL pool, Data Explorer pool, and Spark pool for your workspace.
-4. At the top of the **Overview** page for your resource group, select **Delete resource group**.
-5. Enter the **dp203-*xxxxxxx*** resource group name to confirm you want to delete it, and select **Delete**.
-
-    After a few minutes, your Azure Synapse workspace resource group and the managed workspace resource group associated with it will be deleted.
+**You have successfully completed the lab**
