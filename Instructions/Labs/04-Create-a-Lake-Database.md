@@ -1,18 +1,16 @@
-# Lab 04: Analyze data in a lake database
+# Analyze data in a lake database
 
 Azure Synapse Analytics enables you to combine the flexibility of file storage in a data lake with the structured schema and SQL querying capabilities of a relational database through the ability to create a *lake database*. A lake database is a relational database schema defined on a data lake file store that enables data storage to be separated from the compute used to query it. Lake databases combine the benefits of a structured schema that includes support for data types, relationships, and other features typically only found in relational database systems, with the flexibility of storing data in files that can be used independently of a relational database store. Essentially, the lake database "overlays" a relational schema onto files in folders in the data lake.
-
-This exercise should take approximately **45** minutes to complete.
+To support a lake database, you need an Azure Synapse Analytics workspace with access to data lake storage. There is no need for a dedicated SQL pool, since you can define the lake database using the built-in serverless SQL pool. Optionally, you can also use a Spark pool to work with data in the lake database.
 
 ## Provision an Azure Synapse Analytics workspace
 
-To support a lake database, you need an Azure Synapse Analytics workspace with access to data lake storage. There is no need for a dedicated SQL pool, since you can define the lake database using the built-in serverless SQL pool. Optionally, you can also use a Spark pool to work with data in the lake database.
+In this Task, you'll use a combination of a PowerShell script and an ARM template to provision an Azure Synapse Analytics workspace.
 
-In this exercise, you'll use a combination of a PowerShell script and an ARM template to provision an Azure Synapse Analytics workspace.
+1. Sign into the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`.
+2. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
 
-2. In Azure Portal, use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell, selecting a ***PowerShell*** environment and select **create a storage** if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
-
-    ![Azure portal with a cloud shell pane](./images/cloud-shell.png)
+    ![Azure portal with a cloud shell pane](./images/work203ps.png)
 
     > **Note**: If you have previously created a cloud shell that uses a *Bash* environment, use the the drop-down menu at the top left of the cloud shell pane to change it to ***PowerShell***.
 
@@ -33,8 +31,7 @@ In this exercise, you'll use a combination of a PowerShell script and an ARM tem
     ```
 
 6. If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
-
-7. When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
+7. When prompted, enter a suitable **password** to be set for your Azure Synapse SQL pool.
 
     > **Note**: Be sure to remember this password!
 
@@ -43,40 +40,38 @@ In this exercise, you'll use a combination of a PowerShell script and an ARM tem
 ## Modify container permissions
 
 1. After the deployment script has completed, in the Azure portal, go to the **dp203-*xxxxxxx*** resource group that it created, and notice that this resource group contains your Synapse workspace, a Storage account for your data lake, and an Apache Spark pool.
-
-1. Select the **Storage account** named **datalakexxxxxxx** 
+1. Select the **Storage account** for you data lake named **datalakexxxxxxx** 
 
      ![Data lake navigation to container](./images/datalakexxxxxx-storage.png)
 
-1. Within the **datalakexxxxxx** container, select the **files** folder.
+1. Within the **datalakexxxxxx** container, select the **files folder**
 
     ![Select the files folder within the data lake container](./images/dp203-Container.png)
 
-1. Within the **files** folder you'll note the **Authentication method:** is listed as ***Access key (Switch to Azure AD User Account)*** click on this to change to Azure AD User Account.
+1. Within the **files folder** you'll note the **Authentication method:** is listed as ***Access key (Switch to Azure AD User Account)*** click on this to change to Azure AD User Account.
 
     ![Change to Azure AD user account](./images/dp203-switch-to-aad-user.png)
-
 ## Create a lake database
 
 A lake database is a type of database that you can define in your workspace, and work with using the built-in serverless SQL pool.
 
-1. Go back to the resource group and select your Synapse workspace, and in its **Overview** page, in the **Open Synapse Studio** card, select **Open** to open Synapse Studio in a new browser tab, sign in if prompted.
+1. Select your Synapse workspace, and in its **Overview** page, in the **Open Synapse Studio** card, select **Open** to open Synapse Studio in a new browser tab; signing in if prompted.
 
-2. On the left side of Synapse Studio, use the **&rsaquo;&rsaquo;** icon to expand the menu - this reveals the different pages within Synapse Studio that you'll use to manage resources and perform data analytics tasks.
+1. On the left side of Synapse Studio, use the **&rsaquo;&rsaquo;** icon to expand the menu - this reveals the different pages within Synapse Studio that you'll use to manage resources and perform data analytics tasks.
 
-3. On the **Data** page, view the **Linked** tab and verify that your workspace includes a link to your Azure Data Lake Storage Gen2 storage account.
+1. On the **Data** page, view the **Linked** tab and verify that your workspace includes a link to your Azure Data Lake Storage Gen2 storage account.
 
-4. On the **Data** page, switch back to the **Workspace** tab and note that there are no databases in your workspace.
+1. On the **Data** page, switch back to the **Workspace** tab and note that there are no databases in your workspace.
+   
+1. In the **+** menu, select **Lake database** to open a new tab in which you can design your database schema (accepting the database templates terms of use if prompted).
 
-5. In the **+** menu, select **Lake database** to open a new tab in which you can design your database schema (accepting the database templates terms of use if prompted).
+1. In the **Properties** pane for the new database, change the **Name** to **RetailDB** and verify that the **Input folder** property is automatically updated to **files/RetailDB**. Leave the **Data format** as **Delimited Text** (you could also use *Parquet* format, and you can override the file format for individual tables - we'll use comma-delimited data in this exercise.)
 
-6. In the **Properties** pane for the new database, change the **Name** to **RetailDB** and verify that the **Input folder** property is automatically updated to **files/RetailDB**. Leave the **Data format** as **Delimited Text** (you could also use *Parquet* format, and you can override the file format for individual tables - we'll use comma-delimited data in this exercise.)
+1. At the top of the **RetailDB** pane, select **Publish** to save the database so far.
 
-7. At the top of the **RetailDB** pane, select **Publish** to save the database so far.
+1. In the **Data** pane on the left, view the **Linked** tab. Then expand **Azure Data Lake Storage Gen2** and the primary **datalake*xxxxxxx*** store for your **synapse*xxxxxxx*** workspace, and select the **files** file system; which currently contains a folder named **synapse**.
 
-8. In the **Data** pane on the left, view the **Linked** tab. Then expand **Azure Data Lake Storage Gen2** and the primary **datalake*xxxxxxx*** store for your **synapse*xxxxxxx*** workspace, and select the **files** file system, which currently contains a folder named **synapse**.
-
-9.  In the **files** tab that has opened, select **More** dropdown, then **New folder** button to create a new folder named **RetailDB** - this will be the input folder for the data files used by tables in your database.
+1.  In the **files** tab that has opened, use the **+ New folder** button to create a new folder named **RetailDB** - this will be the input folder for the data files used by tables in your database.
 
 ## Create a table
 
@@ -89,17 +84,29 @@ Now that you have created a lake database, you can define its schema by creating
 2. With **Table_1** selected, in the **General** tab under the database design canvas, change the **Name** property to **Customer**.
 
 3. Expand the **Storage settings for table** section and note that the table will be stored as delimited text in the **files/RetailDB/Customer** folder in the default data lake store for your Synapse workspace.
+
 4. On the **Columns** tab, note that by default, the table contains one column named **Column_1**. Edit the column definition to match the following properties:
 
-    ![Change to Azure AD user account](./images/DP-203(4-1).png)
+    | Name | Keys | Description | Nullability | Data type | Format / Length |
+    | ---- | ---- | ----------- | ----------- | --------- | --------------- |
+    | CustomerId | PK &#128505; | Unique customer ID | &#128454;  | long | |
 
 5. In the **+ Column** list, select **New column**, and modify the new column definition to add a **FirstName** column to the table as follows:
 
-    ![Change to Azure AD user account](./images/DP-203(4-2).png)
+    | Name | Keys | Description | Nullability | Data type | Format / Length |
+    | ---- | ---- | ----------- | ----------- | --------- | --------------- |
+    | CustomerId | PK &#128505; | Unique customer ID | &#128454;  | long | |
+    | **FirstName** | **PK &#128454;** | **Customer first name** | **&#128454;** | **string** | **256** |
 
 6. Add more new columns until the table definition looks like this:
 
-    ![Change to Azure AD user account](./images/DP-203(4-3).png)
+    | Name | Keys | Description | Nullability | Data type | Format / Length |
+    | ---- | ---- | ----------- | ----------- | --------- | --------------- |
+    | CustomerId | PK &#128505; | Unique customer ID | &#128454;  | long | |
+    | FirstName | PK &#128454; | Customer first name | &#128454; | string | 256 |
+    | LastName | PK &#128454; | Customer last name | &#128505; | string | 256 |
+    | EmailAddress | PK &#128454; | Customer email | &#128454; | string | 256 |
+    | Phone | PK &#128454; | Customer phone | &#128505; | string | 256 |
 
 7. When you've added all of the columns, publish the database again to save the changes.
 
@@ -142,13 +149,29 @@ As you've seen, you can create the tables you need in your lake database from sc
     - ActualAbandonmentDate
     - ProductGrossWeight
     - ItemSku
+
 7. On the toolbar in the **Columns** pane, select **Delete** to remove the selected columns. This should leave you with the following columns:
 
-    ![Change to Azure AD user account](./images/DP-203(4--4).png)
+    | Name | Keys | Description | Nullability | Data type | Format / Length |
+    | ---- | ---- | ----------- | ----------- | --------- | --------------- |
+    | ProductId | PK &#128505; | The unique identifier of a Product. | &#128454;  | long | |
+    | ProductName | PK &#128454; | The name of the Product... | &#128505; | string | 128 |
+    | IntroductionDate | PK &#128454; | The date that the Product was introduced for sale. | &#128505; | date | YYYY-MM-DD |
+    | ActualAbandonmentDate | PK &#128454; | The actual date that the marketing of the product was discontinued... | &#128505; | date | YYY-MM-DD |
+    | ProductGrossWeight | PK &#128454; | The gross product weight. | &#128505; | decimal | 18,8 |
+    | ItemSku | PK &#128454; | The Stock Keeping Unit identifier... | &#128505; | string | 20 |
 
 8. Add a new column named **ListPrice** to the table as shown here:
 
-    ![Change to Azure AD user account](./images/DP-203(4--5).png)
+    | Name | Keys | Description | Nullability | Data type | Format / Length |
+    | ---- | ---- | ----------- | ----------- | --------- | --------------- |
+    | ProductId | PK &#128505; | The unique identifier of a Product. | &#128454;  | long | |
+    | ProductName | PK &#128454; | The name of the Product... | &#128505; | string | 128 |
+    | IntroductionDate | PK &#128454; | The date that the Product was introduced for sale. | &#128505; | date | YYYY-MM-DD |
+    | ActualAbandonmentDate | PK &#128454; | The actual date that the marketing of the product was discontinued... | &#128505; | date | YYY-MM-DD |
+    | ProductGrossWeight | PK &#128454; | The gross product weight. | &#128505; | decimal | 18,8 |
+    | ItemSku | PK &#128454; | The Stock Keeping Unit identifier... | &#128505; | string | 20 |
+    | **ListPrice** | **PK &#128454;** | **The product price.** | **&#128454;** | **decimal** | **18,2** |
 
 9. When you've modified the columns as shown above, publish the database again to save the changes.
 
@@ -185,10 +208,12 @@ So far, you've created tables and then populated them with data. In some cases, 
 ### Create a table
 
 1. In the main pane, switch back to the **RetailDB** pane, which contains your database schema (currently containing the **Customer** and **Product** tables).
+
 2. In the **+ Table** menu, select **From data lake**. Then in the **Create external table from data lake** pane, specify the following options:
     - **External table name**: SalesOrder
     - **Linked service**: Select **synapse*xxxxxxx*-WorkspaceDefautStorage(datalake*xxxxxxx*)**
     - **Input file of folder**: files/RetailDB/SalesOrder
+
 3. Continue to the next page and then create the table with the following options:
     - **File type**: CSV
     - **Field terminator**: Default (comma ,)
@@ -199,16 +224,28 @@ So far, you've created tables and then populated them with data. In some cases, 
 
 4. When the table has been created, note that it includes columns named **C1**, **C2**, and so on and that the data types have been inferred from the data in the folder. Modify the column definitions as follows:
 
-    ![Change to Azure AD user account](./images/DP-203(4-6).png)
+    | Name | Keys | Description | Nullability | Data type | Format / Length |
+    | ---- | ---- | ----------- | ----------- | --------- | --------------- |
+    | SalesOrderId | PK &#128505; | The unique identifier of an order. | &#128454;  | long | |
+    | OrderDate | PK &#128454; | The date of the order. | &#128454; | timestamp | yyyy-MM-dd |
+    | LineItemId | PK &#128505; | The ID of an individual line item. | &#128454; | long | |
+    | CustomerId | PK &#128454; | The customer. | &#128454; | long | |
+    | ProductId | PK &#128454; | The product. | &#128454; | long | |
+    | Quantity | PK &#128454; | The order quantity. | &#128454; | long | |
+
     > **Note**: The table contains a record for each individual item ordered, and includes a composite primary key comprised of **SalesOrderId** and **LineItemId**.
 
 5. On the **Relationships** tab for the **SalesOrder** table, in the **+ Relationship** list, select **To table**, and then define the following relationship:
 
-    ![Change to Azure AD user account](./images/DP-203(4--7).png)
+    | From table | From column | To table | To column |
+    | ---- | ---- | ----------- | ----------- |
+    | Customer | CustomerId | SalesOrder | CustomerId |
 
 6. Add a second *To table* relationship with the following settings:
 
-    ![Change to Azure AD user account](./images/DP-203(4-7).png)
+    | From table | From column | To table | To column |
+    | ---- | ---- | ----------- | ----------- |
+    | Product | ProductId | SalesOrder | ProductId |
 
     The ability to define relationships between tables helps enforce referential integrity between related data entities. This is a common feature of relational databases that would otherwise be difficult to apply to files in a data lake.
 
@@ -269,3 +306,7 @@ Now that you have some tables in your database, you can use them to work with th
 7. Use the **&#9655;** button on the left of the cell to run it and verify that a row for sales order 99999 was inserted into the **SalesOrder** table.
 
 8. Close the **Notebook 1** pane, stopping the Spark session and discarding your changes.
+
+   **You have successfully completed the lab**
+
+
