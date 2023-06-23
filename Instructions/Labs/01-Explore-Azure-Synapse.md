@@ -36,7 +36,7 @@ In this Task, you'll use a combination of a PowerShell script and an ARM templat
     ```
 
 6. If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
-7. When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
+7. When prompted, enter a suitable **password** to be set for your Azure Synapse SQL pool.
 
     > **Note**: Be sure to remember this password!
 
