@@ -59,6 +59,7 @@ In this Task, you'll use a combination of a PowerShell script and an ARM templat
 Let's look at some SQL Based approaches to loading data into the Data Warehouse.
 
 1. On the  **Data** page, select the **workspace** tab.
+
 2. Expand **SQL Database** and select your **sql*xxxxxxx*** database. Then in its **...** menu, select **New SQL Script** > 
 **Empty Script**.
 
@@ -74,6 +75,7 @@ You now have a blank SQL page, which is connected to the instance for the follow
     ```
 
 2. On the toolbar, use the **&#9655; Run** button to run the SQL code and confirm that there are **0** rows currently in the **StageProduct** table.
+
 3. Replace the code with the following COPY statement (changing **datalake*xxxxxx*** to the name of your data lake):
 
     ```sql
@@ -123,6 +125,7 @@ You now have a blank SQL page, which is connected to the instance for the follow
     ```
 
 7. On the **files** tab, view the root folder of your data lake and verify that a new folder named **_rejectedrows** has been created (if you don't see this folder, in the **More** menu, select **Refresh** to refresh the view).
+
 8. Open the **_rejectedrows** folder and the date and time specific subfolder it contains, and note that files with names similar to ***QID123_1_2*.Error.Txt** and ***QID123_1_2*.Row.Txt** have been created. You can right-click each of these files and select **Preview** to see details of the error and the row that was rejected.
 
     The use of staging tables enables you to validate or transform data before moving or using it to append to or upsert into any existing dimension tables. The COPY statement provides a simple but high-performance technique that you can use to easily load data from files in a data lake into staging tables, and as you've seen, identify and redirect invalid rows.
@@ -150,8 +153,9 @@ You now have a blank SQL page, which is connected to the instance for the follow
     FROM dbo.StageProduct;
     ```
 
-2. Run the script, which creates a new table named **DimProduct**  from the staged product data that uses **ProductAltKey** as its hash distribution key and has a clustered columnstore index.
-4. Use the following query to view the contents of the new **DimProduct** table:
+1. Run the script, which creates a new table named **DimProduct**  from the staged product data that uses **ProductAltKey** as its hash distribution key and has a clustered columnstore index.
+
+1. Use the following query to view the contents of the new **DimProduct** table:
 
     ```sql
     SELECT ProductKey,
@@ -222,6 +226,7 @@ After loading new data into the data warehouse, it's recommended to rebuild the 
     ```
 
 2. Run the script to rebuild the indexes on the **DimProduct** table.
+
 3. Replace the code in the script pane with the following code:
 
     ```sql
@@ -230,3 +235,6 @@ After loading new data into the data warehouse, it's recommended to rebuild the 
     ```
 
 4. Run the script to create or update statistics on the **GeographyKey** column of the **DimCustomer** table.
+
+   **You have successfully completed the lab**
+
