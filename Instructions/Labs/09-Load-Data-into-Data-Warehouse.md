@@ -1,19 +1,16 @@
-# Lab 09: Load Data into a Relational Data Warehouse
+# Load Data into a Relational Data Warehouse
 
-In this exercise, you're going to load data into a dedicated SQL Pool.
+In this exercise, you're going to load data into a dedicated SQL Pool.You'll need an Azure Synapse Analytics workspace with access to data lake storage and a dedicated SQL pool hosting a data warehouse.
 
-This exercise should take approximately **30** minutes to complete.
 
 ## Provision an Azure Synapse Analytics workspace
 
-You'll need an Azure Synapse Analytics workspace with access to data lake storage and a dedicated SQL pool hosting a data warehouse.
-
-In this exercise, you'll use a combination of a PowerShell script and an ARM template to provision an Azure Synapse Analytics workspace.
+In this Task, you'll use a combination of a PowerShell script and an ARM template to provision an Azure Synapse Analytics workspace.
 
 1. Sign into the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`.
 2. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment and creating storage if prompted. The Cloud Shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
 
-    ![Azure portal with a cloud shell pane](./images/cloud-shell.png)
+    ![Azure portal with a cloud shell pane](./images/work203ps.png)
 
     > **Note**: If you have previously created a cloud shell that uses a *Bash* environment, use the the drop-down menu at the top left of the cloud shell pane to change it to ***PowerShell***.
 
@@ -34,7 +31,7 @@ In this exercise, you'll use a combination of a PowerShell script and an ARM tem
     ```
 
 6. If prompted, choose which subscription you want to use (this option will only happen if you have access to multiple Azure subscriptions).
-7. When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
+7. When prompted, enter a suitable **password** to be set for your Azure Synapse SQL pool.
 
     > **Note**: Be sure to remember this password!
 
@@ -61,6 +58,7 @@ In this exercise, you'll use a combination of a PowerShell script and an ARM tem
 Let's look at some SQL Based approaches to loading data into the Data Warehouse.
 
 1. On the  **Data** page, select the **workspace** tab.
+
 2. Expand **SQL Database** and select your **sql*xxxxxxx*** database. Then in its **...** menu, select **New SQL Script** > 
 **Empty Script**.
 
@@ -76,6 +74,7 @@ You now have a blank SQL page, which is connected to the instance for the follow
     ```
 
 2. On the toolbar, use the **&#9655; Run** button to run the SQL code and confirm that there are **0** rows currently in the **StageProduct** table.
+
 3. Replace the code with the following COPY statement (changing **datalake*xxxxxx*** to the name of your data lake):
 
     ```sql
@@ -125,6 +124,7 @@ You now have a blank SQL page, which is connected to the instance for the follow
     ```
 
 7. On the **files** tab, view the root folder of your data lake and verify that a new folder named **_rejectedrows** has been created (if you don't see this folder, in the **More** menu, select **Refresh** to refresh the view).
+
 8. Open the **_rejectedrows** folder and the date and time specific subfolder it contains, and note that files with names similar to ***QID123_1_2*.Error.Txt** and ***QID123_1_2*.Row.Txt** have been created. You can right-click each of these files and select **Preview** to see details of the error and the row that was rejected.
 
     The use of staging tables enables you to validate or transform data before moving or using it to append to or upsert into any existing dimension tables. The COPY statement provides a simple but high-performance technique that you can use to easily load data from files in a data lake into staging tables, and as you've seen, identify and redirect invalid rows.
@@ -152,8 +152,9 @@ You now have a blank SQL page, which is connected to the instance for the follow
     FROM dbo.StageProduct;
     ```
 
-2. Run the script, which creates a new table named **DimProduct**  from the staged product data that uses **ProductAltKey** as its hash distribution key and has a clustered columnstore index.
-4. Use the following query to view the contents of the new **DimProduct** table:
+1. Run the script, which creates a new table named **DimProduct**  from the staged product data that uses **ProductAltKey** as its hash distribution key and has a clustered columnstore index.
+
+1. Use the following query to view the contents of the new **DimProduct** table:
 
     ```sql
     SELECT ProductKey,
@@ -224,6 +225,7 @@ After loading new data into the data warehouse, it's recommended to rebuild the 
     ```
 
 2. Run the script to rebuild the indexes on the **DimProduct** table.
+
 3. Replace the code in the script pane with the following code:
 
     ```sql
@@ -233,14 +235,5 @@ After loading new data into the data warehouse, it's recommended to rebuild the 
 
 4. Run the script to create or update statistics on the **GeographyKey** column of the **DimCustomer** table.
 
-## Delete Azure resources
+   **You have successfully completed the lab**
 
-If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
-
-1. Close the Synapse Studio browser tab and return to the Azure portal.
-2. On the Azure portal, on the **Home** page, select **Resource groups**.
-3. Select the **dp203-*xxxxxxx*** resource group for your Synapse Analytics workspace (not the managed resource group), and verify that it contains the Synapse workspace, storage account, and Spark pool for your workspace.
-4. At the top of the **Overview** page for your resource group, select **Delete resource group**.
-5. Enter the **dp203-*xxxxxxx*** resource group name to confirm you want to delete it, and select **Delete**.
-
-    After a few minutes, your Azure Synapse workspace resource group and the managed workspace resource group associated with it will be deleted.
