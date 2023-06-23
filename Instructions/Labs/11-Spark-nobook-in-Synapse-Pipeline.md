@@ -100,7 +100,7 @@ Now that you understand the transformation process, you're ready to automate it 
 
 3. In the **Activities** pane, expand **Synapse**; and then drag a **Notebook** activity to the pipeline design surface as shown here:
 
-    ![Screenshot of a pipeline containing a Notebook activity.](images/notebook-pipeline.png)
+    ![Screenshot of a pipeline containing a Notebook activity.](images/work203pp.png)
 
 4. In the **General** tab for the Notebook activity, change its name to **Run Spark Transform**.
 
