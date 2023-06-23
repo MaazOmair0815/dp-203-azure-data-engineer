@@ -2,7 +2,6 @@
 
 In this exercise, you're going to load data into a dedicated SQL Pool.You'll need an Azure Synapse Analytics workspace with access to data lake storage and a dedicated SQL pool hosting a data warehouse.
 
-This exercise should take approximately **30** minutes to complete.
 
 ## Provision an Azure Synapse Analytics workspace
 
@@ -32,7 +31,7 @@ In this Task, you'll use a combination of a PowerShell script and an ARM templat
     ```
 
 6. If prompted, choose which subscription you want to use (this option will only happen if you have access to multiple Azure subscriptions).
-7. When prompted, enter a suitable password to be set for your Azure Synapse SQL pool.
+7. When prompted, enter a suitable **password** to be set for your Azure Synapse SQL pool.
 
     > **Note**: Be sure to remember this password!
 
